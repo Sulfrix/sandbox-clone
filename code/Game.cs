@@ -1,7 +1,7 @@
 ﻿using Sandbox;
 using System.Numerics;
 
-[Library( "sandbox-clone", Title = "Sandbox Clone" )]
+[Library( "sandbox_clone", Title = "Sandbox Clone" )]
 partial class SandboxCloneGame : Game
 {
 	public SandboxCloneGame()

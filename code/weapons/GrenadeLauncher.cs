@@ -6,7 +6,9 @@ partial class GrenadeLauncher : Weapon
 	public override string ViewModelPath => "weapons/rust_pumpshotgun/v_rust_pumpshotgun.vmdl";
 	public override float PrimaryRate => 1f;
 	//public override float SecondaryRate => 1f;
-	public override float ReloadTime => 1f;
+	public override float ReloadTime => 0.5f;
+
+	public float detTime = 1f;
 
 	public override void Spawn()
 	{
@@ -46,6 +48,7 @@ partial class GrenadeLauncher : Weapon
 		proj.Position = Owner.EyePos + Owner.EyeRot.Forward * 70;
 		proj.Velocity = Owner.EyeRot.Forward * 2000 + new Vector3(0f, 0f, 120f);
 		proj.Rotation = Owner.EyeRot;
+		proj.detTime = detTime;
 		proj.owner = this;
 		//proj.Spawn();
 	}

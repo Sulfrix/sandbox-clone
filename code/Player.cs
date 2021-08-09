@@ -194,6 +194,10 @@ partial class SandboxPlayer : Player
 		{
 			timeSinceJumpReleased = 1;
 		}
+
+		//Animator.SetLookAt( "aim_head", new Vector3( 0, 0, 0 ) );
+		//Animator.SetLookAt( "aim_eyes", new Vector3( 0, 0, 0 ) );
+		//Animator.SetLookAt( "aim_body", new Vector3( 0, 0, 0 ) );
 	}
 
 	public override void StartTouch( Entity other )

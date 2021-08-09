@@ -1,0 +1,4 @@
+importfilelist
+{
+	"file"	"moyai_is_unused.vmt"
+}

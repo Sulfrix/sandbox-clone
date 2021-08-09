@@ -7,6 +7,7 @@ public partial class GrenadeProjectile : Prop
 	public Entity owner;
 	private bool hasTouched = false;
 	private float worldImpactTime;
+	public float detTime;
 
 	public override void Spawn()
 	{
@@ -51,23 +52,38 @@ public partial class GrenadeProjectile : Prop
 		Sound.FromWorld( "rust_pumpshotgun.shootdouble", PhysicsBody.MassCenter );
 		Particles.Create( "particles/explosion/barrel_explosion/explosion_barrel.vpcf", PhysicsBody.MassCenter );
 
+
 		if ( debug_prop_explosion )
 			DebugOverlay.Sphere( sourcePos, radius, Color.Orange, true, 5 );
+
+		var debugDuration = 1;
 
 		// Stolen from prop code, sorry :P
 		foreach ( var overlap in overlaps )
 		{
 			if ( overlap is not ModelEntity ent || !ent.IsValid() )
+			{
+				//DebugOverlay.Text( Position, "Kablooey cancel: not modelentity, or valid", Color.White, debugDuration );
 				continue;
+			}
 
 			if ( ent.LifeState != LifeState.Alive )
+			{
+				//DebugOverlay.Text( ent.Position, "Kablooey cancel: not alive", Color.White, debugDuration );
 				continue;
+			}
 
 			if ( !ent.PhysicsBody.IsValid() )
+			{
+				//DebugOverlay.Text( ent.Position, "Kablooey cancel: no valid physics body", Color.White, debugDuration );
 				continue;
+			}
 
 			if ( ent.IsWorld )
+			{
+				//DebugOverlay.Text( Position, "Kablooey cancel: world", Color.White, debugDuration );
 				continue;
+			}
 
 			var targetPos = ent.PhysicsBody.MassCenter;
 
@@ -109,18 +125,24 @@ public partial class GrenadeProjectile : Prop
 	[Event.Tick]
 	public void Tick()
 	{
-		if ( !IsServer )
-			return;
+
 		if (!hasTouched)
 		{
-			Rotation = Rotation.LookAt( Velocity.Normal );
+			if (IsServer)
+			{
+				Rotation = Rotation.LookAt( Velocity.Normal );
+			}
 		}
 		else
 		{
-			if (Time.Now - worldImpactTime > 0.75	)
+			if (Time.Now - worldImpactTime > detTime && IsServer )
 			{
 				Explode(null);
 			}
+
+			float fractionLeft = (detTime - (Time.Now - worldImpactTime)) / detTime;
+			DebugOverlay.Text( Position, (fractionLeft).ToString(), Color.White, 0, 10000 );
+			Scale = (MathF.Pow(1 - fractionLeft, 2f))*2 + 1;
 		}
 	}
 
